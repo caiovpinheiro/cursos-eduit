@@ -13,5 +13,6 @@ mkdir -p \
 
 chown -R www-data:www-data "$BASE/storage" "$BASE/bootstrap/cache"
 chmod -R ug+rwx "$BASE/storage" "$BASE/bootstrap/cache"
+ln -sfn "$BASE/storage/app/public" "$BASE/public/storage"
 
 exec "$@"
