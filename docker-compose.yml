@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: curso-platform-api
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - curso-platform-network
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=curso_platform
+      - DB_USERNAME=curso_user
+      - DB_PASSWORD=curso_password
+      - REDIS_HOST=redis
+
+  db:
+    image: mysql:8.0
+    container_name: curso-platform-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: curso_platform
+      MYSQL_USER: curso_user
+      MYSQL_PASSWORD: curso_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - curso-platform-network
+    ports:
+      - "3307:3306"
+
+  redis:
+    image: redis:7-alpine
+    container_name: curso-platform-redis
+    restart: unless-stopped
+    networks:
+      - curso-platform-network
+    ports:
+      - "6380:6379"
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  curso-platform-network:
+    driver: bridge
