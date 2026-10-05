@@ -1,0 +1,23 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Trigger Easypanel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deployment
+        env:
+          DEPLOY_URL: ${{ secrets.EASYPANEL_DEPLOY_CURSOS }}
+        run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "Secret EASYPANEL_DEPLOY_CURSOS is not set."
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error --request POST "$DEPLOY_URL"
+          echo "Deployment triggered."
