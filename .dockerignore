@@ -6,10 +6,6 @@
 vendor
 node_modules
 curso_platform
-storage/logs
-storage/framework/cache
-storage/framework/sessions
-storage/framework/views
 tests
 docs
 *.md

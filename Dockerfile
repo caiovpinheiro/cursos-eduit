@@ -25,7 +25,13 @@ WORKDIR /var/www/html
 COPY . .
 
 # Instalar dependências do PHP
-RUN chmod +x /var/www/html/docker/entrypoint.sh \
+RUN mkdir -p \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/framework/cache/data \
+        storage/logs \
+        bootstrap/cache \
+    && chmod +x /var/www/html/docker/entrypoint.sh \
     && composer install --no-dev --optimize-autoloader
 
 # Configurar permissões (bind mount no runtime pode sobrescrever — ver docker/entrypoint.sh)
